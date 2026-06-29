@@ -11,6 +11,7 @@ const downloadButton = document.querySelector("#downloadButton");
 const printButton = document.querySelector("#printButton");
 const entryTableBody = document.querySelector("#entryTableBody");
 const resultTableBody = document.querySelector("#resultTableBody");
+const printPreviewElement = document.querySelector("#printPreview");
 const printTableBody = document.querySelector("#printTableBody");
 const printMetaElement = document.querySelector("#printMeta");
 const entryRowTemplate = document.querySelector("#entryRowTemplate");
@@ -411,7 +412,20 @@ function openPrintPreview() {
     return;
   }
 
-  window.print();
+  const printWindow = window.open("", "_blank", "noopener,noreferrer");
+
+  if (!printWindow) {
+    setMessage(
+      resultMessageElement,
+      "Das Druckfenster wurde blockiert. Bitte Pop-ups f\u00fcr diese Seite erlauben.",
+      "error",
+    );
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(buildPrintDocumentHtml());
+  printWindow.document.close();
 }
 
 function buildPrintMetaText() {
@@ -422,6 +436,137 @@ function buildPrintMetaText() {
   }).format(now);
 
   return `${state.results.length} Datens\u00e4tze | Erstellt am ${formattedDate}`;
+}
+
+function buildPrintDocumentHtml() {
+  const previewMarkup = printPreviewElement.innerHTML;
+
+  return `<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Druckvorschau B-Ware</title>
+  <style>
+    ${getPrintDocumentStyles()}
+  </style>
+</head>
+<body>
+  ${previewMarkup}
+  <script>
+    window.addEventListener("load", () => {
+      window.focus();
+      window.print();
+    });
+
+    window.addEventListener("afterprint", () => {
+      window.close();
+    });
+  </script>
+</body>
+</html>`;
+}
+
+function getPrintDocumentStyles() {
+  return `
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #e9e2d3;
+      color: #111111;
+      font-family: Bahnschrift, "Trebuchet MS", sans-serif;
+    }
+
+    body {
+      padding: 24px;
+    }
+
+    .print-preview {
+      overflow: auto;
+    }
+
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 12mm;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 24px 40px rgba(32, 28, 22, 0.16);
+    }
+
+    .print-meta {
+      margin: 0 0 10px;
+      color: #555555;
+      font-size: 0.95rem;
+    }
+
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid rgba(0, 0, 0, 0.22);
+    }
+
+    .print-table caption {
+      margin-bottom: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .print-table th,
+    .print-table td {
+      padding: 9px 10px;
+      font-size: 0.92rem;
+      text-align: left;
+      vertical-align: top;
+      border: 1px solid rgba(0, 0, 0, 0.16);
+    }
+
+    .print-table th {
+      background: rgba(22, 93, 77, 0.12);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .empty-row td {
+      text-align: center;
+      color: #625f56;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm;
+    }
+
+    @media print {
+      html,
+      body {
+        background: #ffffff;
+      }
+
+      body {
+        padding: 0;
+      }
+
+      .print-preview {
+        overflow: visible;
+      }
+
+      .a4-page {
+        width: auto;
+        min-height: auto;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  `;
 }
 
 function escapeCsvValue(value) {
