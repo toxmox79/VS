@@ -84,6 +84,11 @@
         <button id="downloadButton" type="button" disabled>Ergebnis herunterladen</button>
         <button id="printButton" type="button" disabled>Druckvorschau DIN A4</button>
       </div>
+      <p class="print-hint">
+        F&uuml;r einen Ausdruck wie in der Vorschau im Browserdruckdialog bitte
+        <strong>Hintergrund drucken</strong> aktivieren und
+        <strong>Kopf- und Fu&szlig;zeilen</strong> deaktivieren.
+      </p>
 
       <div class="table-wrap">
         <table class="result-table">
@@ -115,9 +120,19 @@
 
       <div id="printPreview" class="print-preview">
         <article class="a4-page">
-          <p id="printMeta" class="print-meta">Noch keine Datens&auml;tze erzeugt</p>
+          <div class="print-header-card">
+            <p class="print-kicker">B-Ware Druckansicht</p>
+            <h3 class="print-title">Datensatz&uuml;bersicht</h3>
+            <p id="printMeta" class="print-meta">Noch keine Datens&auml;tze erzeugt</p>
+          </div>
           <table class="print-table">
-            <caption>Druckvorschau Datensatz&uuml;bersicht</caption>
+            <colgroup>
+              <col class="col-article-id">
+              <col class="col-manufacturer">
+              <col class="col-model">
+              <col class="col-a-grade">
+              <col class="col-vs-grade">
+            </colgroup>
             <thead>
               <tr>
                 <th>ArtikelID</th>
