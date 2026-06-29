@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B-Ware Datensatz-Generator</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <p class="eyebrow">CSV zu Datensatz</p>
+      <h1>B-Ware Datensatz-Generator</h1>
+      <p class="hero-copy">
+        Lade die Testgewichte-CSV hoch, trage deine Mengen pro Artikel ein und exportiere
+        die fertige Tabelle mit ArtikelID, Hersteller, Modell, A-Wertig und VS-Wertig.
+      </p>
+    </section>
+
+    <section class="panel panel-upload">
+      <div class="panel-heading">
+        <h2>1. CSV einlesen</h2>
+        <p>Erwartet wird eine CSV mit den Spalten <code>ItemID</code> und <code>ItemTextName</code>.</p>
+      </div>
+
+      <div class="upload-row">
+        <label class="upload-control">
+          <span>Testgewichte CSV ausw&auml;hlen</span>
+          <input id="csvFile" type="file" accept=".csv,text/csv">
+        </label>
+        <button id="loadSampleButton" type="button" class="secondary-button">Mit vorhandener CSV laden</button>
+      </div>
+
+      <div class="status-grid">
+        <article class="status-card">
+          <span class="status-label">Geladene Artikel</span>
+          <strong id="articleCount">0</strong>
+        </article>
+        <article class="status-card">
+          <span class="status-label">Datei</span>
+          <strong id="fileName">Keine Datei geladen</strong>
+        </article>
+      </div>
+
+      <p id="importMessage" class="message" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>2. Mengen erfassen</h2>
+        <p>F&uuml;r jede ArtikelID kannst du die Anzahl A-Wertig und VS-Wertig eintragen.</p>
+      </div>
+
+      <div class="entry-toolbar">
+        <button id="generateButton" type="button" class="accent-button">Datensatz erstellen</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="entry-table">
+          <thead>
+            <tr>
+              <th>ArtikelID</th>
+              <th>A-Wertig</th>
+              <th>VS-Wertig</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody id="entryTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="table-actions">
+        <button id="addRowButton" type="button">Zeile hinzuf&uuml;gen</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>3. Ergebnis</h2>
+        <p>Die erzeugten Datens&auml;tze werden hier angezeigt und k&ouml;nnen als CSV exportiert werden.</p>
+      </div>
+
+      <div class="entry-toolbar">
+        <button id="downloadButton" type="button" disabled>Ergebnis herunterladen</button>
+        <button id="printButton" type="button" disabled>Druckvorschau DIN A4</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th>ArtikelID</th>
+              <th>Hersteller</th>
+              <th>Modell</th>
+              <th>A-Wertig</th>
+              <th>VS-Wertig</th>
+            </tr>
+          </thead>
+          <tbody id="resultTableBody">
+            <tr class="empty-row">
+              <td colspan="5">Noch keine Datens&auml;tze erzeugt.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p id="resultMessage" class="message" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>4. Druckvorschau</h2>
+        <p>Die Vorschau ist auf DIN A4 ausgelegt und wird beim Drucken automatisch optimiert.</p>
+      </div>
+
+      <div id="printPreview" class="print-preview">
+        <article class="a4-page">
+          <p id="printMeta" class="print-meta">Noch keine Datens&auml;tze erzeugt</p>
+          <table class="print-table">
+            <caption>Druckvorschau Datensatz&uuml;bersicht</caption>
+            <thead>
+              <tr>
+                <th>ArtikelID</th>
+                <th>Hersteller</th>
+                <th>Modell</th>
+                <th>A-Wertig</th>
+                <th>VS-Wertig</th>
+              </tr>
+            </thead>
+            <tbody id="printTableBody">
+              <tr class="empty-row">
+                <td colspan="5">Noch keine Druckdaten verf&uuml;gbar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <template id="entryRowTemplate">
+    <tr>
+      <td>
+        <input class="entry-input" name="articleId" type="text" inputmode="numeric" placeholder="z. B. 5742">
+      </td>
+      <td>
+        <input class="entry-input" name="aGrade" type="number" min="0" step="1" value="0">
+      </td>
+      <td>
+        <input class="entry-input" name="vsGrade" type="number" min="0" step="1" value="0">
+      </td>
+      <td>
+        <button type="button" class="icon-button remove-row-button">Entfernen</button>
+      </td>
+    </tr>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>
