@@ -412,9 +412,13 @@ function openPrintPreview() {
     return;
   }
 
-  const printWindow = window.open("", "_blank", "noopener,noreferrer");
+  const printDocumentHtml = buildPrintDocumentHtml();
+  const printBlob = new Blob([printDocumentHtml], { type: "text/html;charset=utf-8" });
+  const printUrl = URL.createObjectURL(printBlob);
+  const printWindow = window.open(printUrl, "_blank");
 
   if (!printWindow) {
+    URL.revokeObjectURL(printUrl);
     setMessage(
       resultMessageElement,
       "Das Druckfenster wurde blockiert. Bitte Pop-ups f\u00fcr diese Seite erlauben.",
@@ -422,10 +426,6 @@ function openPrintPreview() {
     );
     return;
   }
-
-  printWindow.document.open();
-  printWindow.document.write(buildPrintDocumentHtml());
-  printWindow.document.close();
 }
 
 function buildPrintMetaText() {
@@ -454,14 +454,23 @@ function buildPrintDocumentHtml() {
 <body>
   ${previewMarkup}
   <script>
+    const revokeUrl = () => {
+      if (window.location.protocol === "blob:") {
+        URL.revokeObjectURL(window.location.href);
+      }
+    };
+
     window.addEventListener("load", () => {
       window.focus();
       window.print();
     });
 
     window.addEventListener("afterprint", () => {
+      revokeUrl();
       window.close();
     });
+
+    window.addEventListener("pagehide", revokeUrl);
   </script>
 </body>
 </html>`;
