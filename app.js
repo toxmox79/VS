@@ -11,7 +11,6 @@ const downloadButton = document.querySelector("#downloadButton");
 const printButton = document.querySelector("#printButton");
 const entryTableBody = document.querySelector("#entryTableBody");
 const resultTableBody = document.querySelector("#resultTableBody");
-const printPreviewElement = document.querySelector("#printPreview");
 const printTableBody = document.querySelector("#printTableBody");
 const printMetaElement = document.querySelector("#printMeta");
 const entryRowTemplate = document.querySelector("#entryRowTemplate");
@@ -112,7 +111,7 @@ function importCsvBuffer(buffer, fileName) {
 }
 
 function decodeCsvBuffer(buffer) {
-  const encodings = ["windows-1252", "utf-8"];
+  const encodings = ["utf-8", "windows-1252"];
 
   for (const encoding of encodings) {
     try {
@@ -347,7 +346,7 @@ function renderResults() {
     `;
     downloadButton.disabled = true;
     printButton.disabled = true;
-    printMetaElement.textContent = "Noch keine Datens\u00e4tze erzeugt";
+    printMetaElement.textContent = "In dieser Reihe befindet sich noch kein Datensatz.";
     return;
   }
 
@@ -417,13 +416,11 @@ function openPrintPreview() {
 }
 
 function buildPrintMetaText() {
-  const now = new Date();
-  const formattedDate = new Intl.DateTimeFormat("de-DE", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(now);
+  if (state.results.length === 1) {
+    return "In dieser Reihe befindet sich 1 Datensatz.";
+  }
 
-  return `${state.results.length} Datens\u00e4tze | Erstellt am ${formattedDate}`;
+  return `In dieser Reihe befinden sich ${state.results.length} Datens\u00e4tze.`;
 }
 
 window.addEventListener("afterprint", () => {

@@ -291,25 +291,11 @@ tbody tr:last-child td {
   background: linear-gradient(180deg, rgba(22, 93, 77, 0.08), rgba(22, 93, 77, 0.02));
 }
 
-.print-kicker {
-  margin: 0 0 4px;
-  color: var(--brand);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.print-title {
-  margin: 0 0 6px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.55rem;
-}
-
 .print-meta {
   margin: 0;
-  color: #555555;
-  font-size: 0.92rem;
+  color: #2f3833;
+  font-size: 0.96rem;
+  font-weight: 600;
 }
 
 .print-table {
@@ -452,14 +438,6 @@ tbody tr:last-child td {
     padding: 3mm 4mm;
     border: 1px solid #8a948d;
     background: #e5ece8 !important;
-  }
-
-  body.is-printing-preview .print-kicker {
-    color: #165d4d !important;
-  }
-
-  body.is-printing-preview .print-title {
-    margin-bottom: 2mm;
   }
 
   body.is-printing-preview .print-meta {
